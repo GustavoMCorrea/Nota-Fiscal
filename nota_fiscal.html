@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emissão de Nota Fiscal de Serviço (NFS-e)</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 8px; }
+        .btn { margin-top: 10px; padding: 10px 15px; cursor: pointer; }
+        .output { margin-top: 20px; padding: 15px; border: 1px solid #ccc; }
+        .output h3 { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Emissão de NFS-e</h1>
+        <div class="form-group">
+            <label>Valor da Venda:</label>
+            <input type="number" id="valorVenda" placeholder="Insira o valor da venda">
+        </div>
+        <div class="form-group">
+            <label>Itens Vendidos:</label>
+            <input type="text" id="itens" placeholder="Descreva os itens vendidos">
+        </div>
+        <div class="form-group">
+            <label>IRPF (%):</label>
+            <input type="number" id="irpf" placeholder="Porcentagem IRPF">
+        </div>
+        <div class="form-group">
+            <label>PIS (%):</label>
+            <input type="number" id="pis" placeholder="Porcentagem PIS">
+        </div>
+        <div class="form-group">
+            <label>COFINS (%):</label>
+            <input type="number" id="cofins" placeholder="Porcentagem COFINS">
+        </div>
+        <div class="form-group">
+            <label>INSS (%):</label>
+            <input type="number" id="inss" placeholder="Porcentagem INSS">
+        </div>
+        <div class="form-group">
+            <label>ISSQN (%):</label>
+            <input type="number" id="issqn" placeholder="Porcentagem ISSQN">
+        </div>
+        <button class="btn" onclick="gerarNotaFiscal()">Gerar Nota Fiscal</button>
+
+        <div class="output" id="notaFiscal"></div>
+    </div>
+
+    <script>
+        function gerarNotaFiscal() {
+            const valorVenda = parseFloat(document.getElementById('valorVenda').value) || 0;
+            const itens = document.getElementById('itens').value;
+            const irpf = parseFloat(document.getElementById('irpf').value) || 0;
+            const pis = parseFloat(document.getElementById('pis').value) || 0;
+            const cofins = parseFloat(document.getElementById('cofins').value) || 0;
+            const inss = parseFloat(document.getElementById('inss').value) || 0;
+            const issqn = parseFloat(document.getElementById('issqn').value) || 0;
+
+            const valorIRPF = (irpf / 100) * valorVenda;
+            const valorPIS = (pis / 100) * valorVenda;
+            const valorCOFINS = (cofins / 100) * valorVenda;
+            const valorINSS = (inss / 100) * valorVenda;
+            const valorISSQN = (issqn / 100) * valorVenda;
+            const totalImpostos = valorIRPF + valorPIS + valorCOFINS + valorINSS + valorISSQN;
+            const valorLiquido = valorVenda - totalImpostos;
+
+            document.getElementById('notaFiscal').innerHTML = `
+                <h3>Nota Fiscal de Serviço</h3>
+                <p><strong>Itens Vendidos:</strong> ${itens}</p>
+                <p><strong>Valor Bruto:</strong> R$ ${valorVenda.toFixed(2)}</p>
+                <p><strong>IRPF:</strong> R$ ${valorIRPF.toFixed(2)}</p>
+                <p><strong>PIS:</strong> R$ ${valorPIS.toFixed(2)}</p>
+                <p><strong>COFINS:</strong> R$ ${valorCOFINS.toFixed(2)}</p>
+                <p><strong>INSS:</strong> R$ ${valorINSS.toFixed(2)}</p>
+                <p><strong>ISSQN:</strong> R$ ${valorISSQN.toFixed(2)}</p>
+                <p><strong>Total de Impostos:</strong> R$ ${totalImpostos.toFixed(2)}</p>
+                <p><strong>Valor Líquido:</strong> R$ ${valorLiquido.toFixed(2)}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
